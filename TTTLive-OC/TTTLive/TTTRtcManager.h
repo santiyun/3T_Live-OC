@@ -11,13 +11,11 @@
 #import "TTTUser.h"
 
 typedef struct {
-    BOOL mix;
-    CGSize videoSize; //default is 360x640
-    NSUInteger fps;
-    BOOL h265;
+    BOOL isCustom;
+    CGSize videoSize;
     NSUInteger videoBitRate;
-    BOOL channels;//是否双声道
-}TTTMixSettings;
+    NSUInteger fps;
+}TTTCustomVideoProfile;
 
 static CGSize TTTVideoMixSize[] = {
     [TTTRtc_VideoProfile_120P] = {160, 120},
@@ -29,12 +27,42 @@ static CGSize TTTVideoMixSize[] = {
     [TTTRtc_VideoProfile_1080P] = {1920, 1080},
 };
 
+static NSString *videoSizeStr[] = {
+    [TTTRtc_VideoProfile_120P]  = @"160X120",
+    [TTTRtc_VideoProfile_180P]  = @"320X180",
+    [TTTRtc_VideoProfile_240P]  = @"320X240",
+    [TTTRtc_VideoProfile_360P]  = @"640x360",
+    [TTTRtc_VideoProfile_480P]  = @"640x480",
+    [TTTRtc_VideoProfile_720P]  = @"1280x720",
+    [TTTRtc_VideoProfile_1080P] = @"1920x1080"
+};
+
+static NSString *videoBitrateStr[] = {
+    [TTTRtc_VideoProfile_120P]  = @"65",
+    [TTTRtc_VideoProfile_180P]  = @"140",
+    [TTTRtc_VideoProfile_240P]  = @"200",
+    [TTTRtc_VideoProfile_360P]  = @"400",
+    [TTTRtc_VideoProfile_480P]  = @"500",
+    [TTTRtc_VideoProfile_720P]  = @"1130",
+    [TTTRtc_VideoProfile_1080P] = @"2080"
+};
+
 @interface TTTRtcManager : NSObject
 @property (nonatomic, strong) TTTRtcEngineKit *rtcEngine;
 @property (nonatomic, strong) TTTUser *me;
 @property (nonatomic, assign) int64_t roomID;
-@property (nonatomic, assign) TTTMixSettings mixSettings;
+//settings
+@property (nonatomic, assign) BOOL isCustom;
+//-local
+@property (nonatomic, assign) BOOL isHighQualityAudio;
+@property (nonatomic, assign) TTTRtcVideoProfile localProfile;//set default is 360P
+@property (nonatomic, assign) TTTCustomVideoProfile localCustomProfile;
+//cdn
+@property (nonatomic, assign) BOOL h265;
+@property (nonatomic, assign) BOOL doubleChannel;
+@property (nonatomic, assign) TTTRtcVideoProfile cdnProfile;
+@property (nonatomic, assign) TTTCustomVideoProfile cdnCustom;
 
 + (instancetype)manager;
-- (void)originCdn;
+
 @end

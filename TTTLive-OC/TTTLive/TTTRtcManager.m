@@ -39,13 +39,11 @@ static id _manager;
     if (self) {
         _rtcEngine = [TTTRtcEngineKit sharedEngineWithAppId:@"a967ac491e3acf92eed5e1b5ba641ab7" delegate:nil];
         _me = [[TTTUser alloc] initWith:0];
-        _mixSettings.videoSize = CGSizeMake(360, 640);//竖屏，360P,default
+        _localProfile = TTTRtc_VideoProfile_Default;
+        _cdnProfile = TTTRtc_VideoProfile_Default;
     }
     return self;
 }
 
-- (void)originCdn {
-    _mixSettings.mix = NO;
-    _mixSettings.videoSize = CGSizeMake(360, 640);;
-}
+
 @end

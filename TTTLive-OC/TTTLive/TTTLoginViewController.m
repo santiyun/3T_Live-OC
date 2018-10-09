@@ -7,7 +7,6 @@
 //
 
 #import "TTTLoginViewController.h"
-#import "TTTCdnViewController.h"
 
 static NSString *const TTTH265 = @"?trans=1";
 
@@ -18,19 +17,9 @@ static NSString *const TTTH265 = @"?trans=1";
 @property (weak, nonatomic) IBOutlet UILabel *websiteLabel;
 @property (nonatomic, weak) UIButton *roleSelectedBtn;
 @property (nonatomic, assign) int64_t uid;
-@property (nonatomic, strong) TTTCdnViewController *cdnVC;
 @end
 
 @implementation TTTLoginViewController
-- (TTTCdnViewController *)cdnVC {
-    if (!_cdnVC) {
-        _cdnVC = [[TTTCdnViewController alloc] init];
-        _cdnVC.view.hidden = YES;
-        _cdnVC.view.frame = self.view.bounds;
-        [self.view addSubview:_cdnVC.view];
-    }
-    return _cdnVC;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -77,24 +66,18 @@ static NSString *const TTTH265 = @"?trans=1";
     [rtcEngine enableAudioVolumeIndication:200 smooth:3];
     BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
     if (clientRole == TTTRtc_ClientRole_Anchor) {
-        [rtcEngine enableVideo];
-        [rtcEngine muteLocalAudioStream:NO];
-        TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
-        NSString *pushURL = [@"rtmp://push.3ttech.cn/sdk/" stringByAppendingString:_roomIDTF.text];
-        if (TTManager.mixSettings.h265) {
-            pushURL = [pushURL stringByAppendingString:TTTH265];
+        if (TTManager.isCustom) {//自定义设置
+            [self customEnterChannel];
+        } else {
+            [rtcEngine enableVideo];
+            [rtcEngine muteLocalAudioStream:NO];
+            TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
+            NSString *pushURL = [@"http://push.3ttech.cn/sdk/" stringByAppendingFormat:@"%@.flv", _roomIDTF.text];
+            //pull -- rtmp://pull.3ttech.cn/sdk/_roomIDTF.text
+            [builder setPublisherUrl:pushURL];
+            [rtcEngine configPublisher:builder.build];
+            [rtcEngine setVideoProfile:TTTRtc_VideoProfile_360P swapWidthAndHeight:swapWH];
         }
-        [builder setPublisherUrl:pushURL];
-        [rtcEngine configPublisher:builder.build];
-        if (TTManager.mixSettings.mix) {//自定义混频参数
-            [rtcEngine setVideoMixerParams:TTManager.mixSettings.videoSize videoFrameRate:TTManager.mixSettings.fps videoBitRate:TTManager.mixSettings.videoBitRate];
-            if (TTManager.mixSettings.channels) {
-                [rtcEngine setAudioMixerParams:44100 channels:2];
-            } else {
-                [rtcEngine setAudioMixerParams:48000 channels:1];
-            }
-        }
-        [rtcEngine setVideoProfile:TTTRtc_VideoProfile_360P swapWidthAndHeight:swapWH];
     } else if (clientRole == TTTRtc_ClientRole_Broadcaster) {
         [rtcEngine enableVideo];
         [rtcEngine muteLocalAudioStream:NO];
@@ -106,8 +89,46 @@ static NSString *const TTTH265 = @"?trans=1";
     [rtcEngine joinChannelByKey:nil channelName:_roomIDTF.text uid:_uid joinSuccess:nil];
 }
 
-- (IBAction)cdnBtnAction:(id)sender {
-    self.cdnVC.view.hidden = NO;
+- (void)customEnterChannel {
+    TTTRtcEngineKit *rtcEngine = TTManager.rtcEngine;
+    [rtcEngine enableVideo];
+    [rtcEngine muteLocalAudioStream:NO];
+    TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
+    NSString *pushURL = [@"rtmp://push.3ttech.cn/sdk/" stringByAppendingString:_roomIDTF.text];
+    //h265
+    if (TTManager.h265) {
+        pushURL = [pushURL stringByAppendingString:TTTH265];
+    }
+    [builder setPublisherUrl:pushURL];
+    [rtcEngine configPublisher:builder.build];
+    //local
+    BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
+    if (TTManager.localCustomProfile.isCustom) {
+        TTTCustomVideoProfile custom = TTManager.localCustomProfile;
+        CGSize videoSize = custom.videoSize;
+        if (swapWH) {
+            videoSize = CGSizeMake(videoSize.height, videoSize.width);
+        }
+        [rtcEngine setVideoProfile:videoSize frameRate:custom.fps bitRate:custom.videoBitRate];
+    } else {
+        [rtcEngine setVideoProfile:TTManager.localProfile swapWidthAndHeight:swapWH];
+    }
+    //高音质
+    if (TTManager.isHighQualityAudio) {
+        [rtcEngine setHighQualityAudioParametersWithFullband:YES stereo:YES fullBitrate:YES];
+    }
+    //cdn
+    TTTCustomVideoProfile custom = TTManager.cdnCustom;
+    CGSize videoSize = custom.videoSize;
+    if (swapWH) {
+        videoSize = CGSizeMake(videoSize.height, videoSize.width);
+    }
+    [rtcEngine setVideoMixerParams:videoSize videoFrameRate:custom.fps videoBitRate:custom.videoBitRate];
+    if (TTManager.doubleChannel) {
+        [rtcEngine setAudioMixerParams:44100 channels:2];
+    } else {
+        [rtcEngine setAudioMixerParams:48000 channels:1];
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

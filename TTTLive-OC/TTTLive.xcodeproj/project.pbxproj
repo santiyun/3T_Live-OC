@@ -27,8 +27,10 @@
 		9B53C19C212BBB9E00497907 /* TTTAVRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B53C19B212BBB9E00497907 /* TTTAVRegion.m */; };
 		9B53C19E212BBBAC00497907 /* TTTAVRegion.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B53C19D212BBBAC00497907 /* TTTAVRegion.xib */; };
 		9B53C1A1212BBEAB00497907 /* TTTVideoPosition.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B53C1A0212BBEAB00497907 /* TTTVideoPosition.m */; };
-		9B60D4EF2133ED750058B879 /* TTTCdnViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B60D4ED2133ED750058B879 /* TTTCdnViewController.m */; };
-		9B60D4F02133ED750058B879 /* TTTCdnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B60D4EE2133ED750058B879 /* TTTCdnViewController.xib */; };
+		9BCB136C2149FB6900DD0724 /* TTTSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB136B2149FB6900DD0724 /* TTTSettingViewController.m */; };
+		9BCB136F2149FB7800DD0724 /* TTTSLocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB136E2149FB7800DD0724 /* TTTSLocalViewController.m */; };
+		9BCB13722149FB8700DD0724 /* TTTSCdnViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB13712149FB8700DD0724 /* TTTSCdnViewController.m */; };
+		9BCB1374214A357F00DD0724 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BCB1373214A357F00DD0724 /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,9 +66,13 @@
 		9B53C19D212BBBAC00497907 /* TTTAVRegion.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TTTAVRegion.xib; sourceTree = "<group>"; };
 		9B53C19F212BBEAB00497907 /* TTTVideoPosition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTVideoPosition.h; sourceTree = "<group>"; };
 		9B53C1A0212BBEAB00497907 /* TTTVideoPosition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTVideoPosition.m; sourceTree = "<group>"; };
-		9B60D4EC2133ED750058B879 /* TTTCdnViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTCdnViewController.h; sourceTree = "<group>"; };
-		9B60D4ED2133ED750058B879 /* TTTCdnViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTCdnViewController.m; sourceTree = "<group>"; };
-		9B60D4EE2133ED750058B879 /* TTTCdnViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TTTCdnViewController.xib; sourceTree = "<group>"; };
+		9BCB136A2149FB6900DD0724 /* TTTSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTSettingViewController.h; sourceTree = "<group>"; };
+		9BCB136B2149FB6900DD0724 /* TTTSettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTSettingViewController.m; sourceTree = "<group>"; };
+		9BCB136D2149FB7800DD0724 /* TTTSLocalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTSLocalViewController.h; sourceTree = "<group>"; };
+		9BCB136E2149FB7800DD0724 /* TTTSLocalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTSLocalViewController.m; sourceTree = "<group>"; };
+		9BCB13702149FB8700DD0724 /* TTTSCdnViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTSCdnViewController.h; sourceTree = "<group>"; };
+		9BCB13712149FB8700DD0724 /* TTTSCdnViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTSCdnViewController.m; sourceTree = "<group>"; };
+		9BCB1373214A357F00DD0724 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BCB1374214A357F00DD0724 /* libsqlite3.tbd in Frameworks */,
 				9B53C18B212BB12400497907 /* ReplayKit.framework in Frameworks */,
 				9B53C189212BB11800497907 /* CoreTelephony.framework in Frameworks */,
 				9B53C187212BB10F00497907 /* SystemConfiguration.framework in Frameworks */,
@@ -114,9 +121,6 @@
 				9B53C195212BB23000497907 /* TTTLoginViewController.m */,
 				9B53C197212BB23900497907 /* TTTLiveViewController.h */,
 				9B53C198212BB23900497907 /* TTTLiveViewController.m */,
-				9B60D4EC2133ED750058B879 /* TTTCdnViewController.h */,
-				9B60D4ED2133ED750058B879 /* TTTCdnViewController.m */,
-				9B60D4EE2133ED750058B879 /* TTTCdnViewController.xib */,
 				9B53C17A212BAFA900497907 /* TTTUser.h */,
 				9B53C17B212BAFA900497907 /* TTTUser.m */,
 				9B53C19A212BBB9E00497907 /* TTTAVRegion.h */,
@@ -124,6 +128,7 @@
 				9B53C19D212BBBAC00497907 /* TTTAVRegion.xib */,
 				9B53C19F212BBEAB00497907 /* TTTVideoPosition.h */,
 				9B53C1A0212BBEAB00497907 /* TTTVideoPosition.m */,
+				9BCB13692149FB4B00DD0724 /* Settings */,
 				9B11C5FA212512B9007799F1 /* Main.storyboard */,
 				9B11C5FD212512BA007799F1 /* Assets.xcassets */,
 				9B53C18C212BB16200497907 /* TTTLive-Prefix.pch */,
@@ -138,6 +143,7 @@
 		9B53C17D212BB0E100497907 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9BCB1373214A357F00DD0724 /* libsqlite3.tbd */,
 				9B53C18A212BB12400497907 /* ReplayKit.framework */,
 				9B53C188212BB11800497907 /* CoreTelephony.framework */,
 				9B53C186212BB10F00497907 /* SystemConfiguration.framework */,
@@ -157,6 +163,19 @@
 				9B53C191212BB1BF00497907 /* UIView+Toast.m */,
 			);
 			path = TTHelper;
+			sourceTree = "<group>";
+		};
+		9BCB13692149FB4B00DD0724 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				9BCB136A2149FB6900DD0724 /* TTTSettingViewController.h */,
+				9BCB136B2149FB6900DD0724 /* TTTSettingViewController.m */,
+				9BCB136D2149FB7800DD0724 /* TTTSLocalViewController.h */,
+				9BCB136E2149FB7800DD0724 /* TTTSLocalViewController.m */,
+				9BCB13702149FB8700DD0724 /* TTTSCdnViewController.h */,
+				9BCB13712149FB8700DD0724 /* TTTSCdnViewController.m */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,7 +242,6 @@
 			files = (
 				9B11C601212512BA007799F1 /* LaunchScreen.storyboard in Resources */,
 				9B11C5FE212512BA007799F1 /* Assets.xcassets in Resources */,
-				9B60D4F02133ED750058B879 /* TTTCdnViewController.xib in Resources */,
 				9B11C5FC212512B9007799F1 /* Main.storyboard in Resources */,
 				9B53C19E212BBBAC00497907 /* TTTAVRegion.xib in Resources */,
 			);
@@ -236,8 +254,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B60D4EF2133ED750058B879 /* TTTCdnViewController.m in Sources */,
+				9BCB136F2149FB7800DD0724 /* TTTSLocalViewController.m in Sources */,
 				9B11C604212512BA007799F1 /* main.m in Sources */,
+				9BCB136C2149FB6900DD0724 /* TTTSettingViewController.m in Sources */,
 				9B53C196212BB23000497907 /* TTTLoginViewController.m in Sources */,
 				9B53C17C212BAFA900497907 /* TTTUser.m in Sources */,
 				9B53C179212BAF7B00497907 /* TTTRtcManager.m in Sources */,
@@ -247,6 +266,7 @@
 				9B11C5F6212512B9007799F1 /* AppDelegate.m in Sources */,
 				9B53C19C212BBB9E00497907 /* TTTAVRegion.m in Sources */,
 				9B53C1A1212BBEAB00497907 /* TTTVideoPosition.m in Sources */,
+				9BCB13722149FB8700DD0724 /* TTTSCdnViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,17 +411,21 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../TTTLib";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/TTTLive/TTTLive-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../TTTLib/WechtSDK";
 				INFOPLIST_FILE = TTTLive/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../TTTLib/WechtSDK";
 				OTHER_LDFLAGS = (
 					"-framework",
 					TTTPlayerKit,
 					"-framework",
 					TTTRtcEngineKit,
+					"-lWeChatSDK",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.3ttech.TTTLive;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -418,17 +442,21 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../TTTLib";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/TTTLive/TTTLive-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../TTTLib/WechtSDK";
 				INFOPLIST_FILE = TTTLive/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../TTTLib/WechtSDK";
 				OTHER_LDFLAGS = (
 					"-framework",
 					TTTPlayerKit,
 					"-framework",
 					TTTRtcEngineKit,
+					"-lWeChatSDK",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.3ttech.TTTLive;
 				PRODUCT_NAME = "$(TARGET_NAME)";

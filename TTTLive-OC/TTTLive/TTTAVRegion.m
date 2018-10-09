@@ -38,7 +38,7 @@
     sender.selected = !sender.isSelected;
     TTManager.me.mutedSelf = sender.isSelected;
     [TTManager.rtcEngine muteLocalAudioStream:sender.isSelected];
-    [self mutedSelf:sender.isSelected];
+    [_voiceBtn setImage:[UIImage imageNamed:sender.isSelected ? @"voice_close" : @"voice_small"] forState:UIControlStateNormal];
 }
 
 - (IBAction)switchCamera:(id)sender {

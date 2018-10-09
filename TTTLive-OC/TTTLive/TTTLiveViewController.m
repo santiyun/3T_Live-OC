@@ -9,6 +9,7 @@
 #import "TTTLiveViewController.h"
 #import "TTTVideoPosition.h"
 #import "TTTAVRegion.h"
+#import <WXApi.h>
 
 @interface TTTLiveViewController ()<TTTRtcEngineDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *anchorVideoView;
@@ -19,6 +20,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *audioStatsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *videoStatsLabel;
 @property (weak, nonatomic) IBOutlet UIView *avRegionsView;
+
+@property (weak, nonatomic) IBOutlet UIView *wxView;
+
+
 @property (nonatomic, strong) NSMutableArray<TTTUser *> *users;
 @property (nonatomic, strong) NSMutableArray<TTTAVRegion *> *avRegions;
 @property (nonatomic, strong) TTTRtcVideoCompositingLayout *videoLayout;
@@ -50,8 +55,15 @@
         //for sei
         _videoLayout = [[TTTRtcVideoCompositingLayout alloc] init];
         //不自定义时根据自己视频尺寸设置
-        _videoLayout.canvasWidth = TTManager.mixSettings.videoSize.width;
-        _videoLayout.canvasHeight = TTManager.mixSettings.videoSize.height;
+        if (TTManager.isCustom) {
+            //竖屏模式下，需要交换宽高
+            _videoLayout.canvasWidth = TTManager.cdnCustom.videoSize.height;
+            _videoLayout.canvasHeight = TTManager.cdnCustom.videoSize.width;
+        } else {
+            //360P 竖屏模式
+            _videoLayout.canvasWidth = 360;
+            _videoLayout.canvasHeight = 640;
+        }
         _videoLayout.backgroundColor = @"#e8e6e8";
     } else if (TTManager.me.clientRole == TTTRtc_ClientRole_Broadcaster) {
         [TTManager.rtcEngine startPreview];
@@ -62,14 +74,16 @@
 }
 
 - (IBAction)leftBtnsAction:(UIButton *)sender {
-    if (sender == _switchBtn) {
-        [TTManager.rtcEngine switchCamera];
-    } else {
+    if (sender.tag == 1001) {
         if (TTManager.me.isAnchor) {
             sender.selected = !sender.isSelected;
             TTManager.me.mutedSelf = sender.isSelected;
             [TTManager.rtcEngine muteLocalAudioStream:sender.isSelected];
         }
+    } else if (sender.tag == 1002) {
+        _wxView.hidden = NO;
+    } else {
+        [TTManager.rtcEngine switchCamera];
     }
 }
 
@@ -82,6 +96,33 @@
     [alert addAction:sureAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
+
+- (IBAction)wxShare:(UIButton *)sender {
+    _wxView.hidden = YES;
+    if ([WXApi isWXAppInstalled]) {
+        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+//        req.bText = YES;
+        WXMediaMessage *message = [WXMediaMessage message];
+        message.title = @"连麦直播";
+        message.description = [NSString stringWithFormat:@"三体云联邀请你加入直播间：%lld", TTManager.roomID];
+        message.thumbData = UIImagePNGRepresentation([UIImage imageNamed:@"wx_logo"]);
+        WXWebpageObject *object = [WXWebpageObject object];
+        object.webpageUrl = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull1.3ttech.cn/sdk/%lld.flv&hls=http://pull1.3ttech.cn/sdk/%lld.m3u8", TTManager.roomID, TTManager.roomID];
+        message.mediaObject = object;
+        req.message = message;
+        //[@"rtmp://pull.3ttech.cn/sdk/" stringByAppendingFormat:@"%lld", TTManager.roomID];
+        req.scene = sender.tag == 101 ? WXSceneSession : WXSceneTimeline;
+        [WXApi sendReq:req];
+    } else {
+        [self showToast:@"手机未安装微信"];
+    }
+}
+
+
+- (IBAction)hiddenWXView:(id)sender {
+    _wxView.hidden = YES;
+}
+
 
 #pragma mark - TTTRtcEngineDelegate
 -(void)rtcEngine:(TTTRtcEngineKit *)engine didJoinedOfUid:(int64_t)uid clientRole:(TTTRtcClientRole)clientRole isVideoEnabled:(BOOL)isVideoEnabled elapsed:(NSInteger)elapsed {
@@ -193,18 +234,14 @@
 
 - (void)rtcEngine:(TTTRtcEngineKit *)engine didLeaveChannelWithStats:(TTTRtcStats *)stats {
     [engine stopPreview];
-    [self dismissViewControllerAnimated:true completion:^{
-        [TTManager originCdn];
-    }];
+    [self dismissViewControllerAnimated:true completion:nil];
 }
 
 - (void)rtcEngineConnectionDidLost:(TTTRtcEngineKit *)engine {
     [self.view.window showToast:@"ConnectionDidLost"];
     [engine leaveChannel:nil];
     [engine stopPreview];
-    [self dismissViewControllerAnimated:YES completion:^{
-        [TTManager originCdn];
-    }];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)rtcEngine:(TTTRtcEngineKit *)engine didKickedOutOfUid:(int64_t)uid reason:(TTTRtcKickedOutReason)reason {
