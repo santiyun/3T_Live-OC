@@ -72,7 +72,7 @@ static NSString *const TTTH265 = @"?trans=1";
             [rtcEngine enableVideo];
             [rtcEngine muteLocalAudioStream:NO];
             TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
-            NSString *pushURL = [@"http://push.3ttech.cn/sdk/" stringByAppendingFormat:@"%@.flv", _roomIDTF.text];
+            NSString *pushURL = [@"http://push.3ttech.cn/sdk/" stringByAppendingFormat:@"%@", _roomIDTF.text];
             //pull -- rtmp://pull.3ttech.cn/sdk/_roomIDTF.text
             [builder setPublisherUrl:pushURL];
             [rtcEngine configPublisher:builder.build];
