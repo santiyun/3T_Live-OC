@@ -25,7 +25,7 @@ static NSString *const TTTH265 = @"?trans=1";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _roleSelectedBtn = _anchorBtn;
-    NSString *websitePrefix = @"http://www.3ttech.cn  version  ";
+    NSString *websitePrefix = @"http://www.3ttech.cn ";
     _websiteLabel.text = [websitePrefix stringByAppendingString:TTTRtcEngineKit.getSdkVersion];
     _uid = arc4random() % 100000 + 1;
     int64_t roomID = [[NSUserDefaults standardUserDefaults] stringForKey:@"ENTERROOMID"].integerValue;
@@ -72,7 +72,7 @@ static NSString *const TTTH265 = @"?trans=1";
             [rtcEngine enableVideo];
             [rtcEngine muteLocalAudioStream:NO];
             TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
-            NSString *pushURL = [@"http://push.3ttech.cn/sdk/" stringByAppendingFormat:@"%@", _roomIDTF.text];
+            NSString *pushURL = [@"rtmp://push.3ttech.cn/sdk/" stringByAppendingFormat:@"%@", _roomIDTF.text];
             //pull -- rtmp://pull.3ttech.cn/sdk/_roomIDTF.text
             [builder setPublisherUrl:pushURL];
             [rtcEngine configPublisher:builder.build];

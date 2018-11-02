@@ -20,9 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *audioStatsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *videoStatsLabel;
 @property (weak, nonatomic) IBOutlet UIView *avRegionsView;
-
 @property (weak, nonatomic) IBOutlet UIView *wxView;
-
 
 @property (nonatomic, strong) NSMutableArray<TTTUser *> *users;
 @property (nonatomic, strong) NSMutableArray<TTTAVRegion *> *avRegions;
@@ -107,7 +105,7 @@
         message.description = [NSString stringWithFormat:@"三体云联邀请你加入直播间：%lld", TTManager.roomID];
         message.thumbData = UIImagePNGRepresentation([UIImage imageNamed:@"wx_logo"]);
         WXWebpageObject *object = [WXWebpageObject object];
-        object.webpageUrl = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull1.3ttech.cn/sdk/%lld.flv&hls=http://pull1.3ttech.cn/sdk/%lld.m3u8", TTManager.roomID, TTManager.roomID];
+        object.webpageUrl = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull1.3ttech.cn/sdk/%lld.flv&hls=http://pull1.3ttech.cn/sdk/%lld/.m3u8", TTManager.roomID, TTManager.roomID];
         message.mediaObject = object;
         req.message = message;
         //[@"rtmp://pull.3ttech.cn/sdk/" stringByAppendingFormat:@"%lld", TTManager.roomID];
