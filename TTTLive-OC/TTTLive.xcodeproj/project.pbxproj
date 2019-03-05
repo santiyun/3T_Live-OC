@@ -31,6 +31,7 @@
 		9BCB136F2149FB7800DD0724 /* TTTSLocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB136E2149FB7800DD0724 /* TTTSLocalViewController.m */; };
 		9BCB13722149FB8700DD0724 /* TTTSCdnViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BCB13712149FB8700DD0724 /* TTTSCdnViewController.m */; };
 		9BCB1374214A357F00DD0724 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BCB1373214A357F00DD0724 /* libsqlite3.tbd */; };
+		9BFAE42821A65CFF005228C6 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BFAE42721A65CFF005228C6 /* libiconv.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		9BCB13702149FB8700DD0724 /* TTTSCdnViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTSCdnViewController.h; sourceTree = "<group>"; };
 		9BCB13712149FB8700DD0724 /* TTTSCdnViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTSCdnViewController.m; sourceTree = "<group>"; };
 		9BCB1373214A357F00DD0724 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		9BFAE42721A65CFF005228C6 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BFAE42821A65CFF005228C6 /* libiconv.tbd in Frameworks */,
 				9BCB1374214A357F00DD0724 /* libsqlite3.tbd in Frameworks */,
 				9B53C18B212BB12400497907 /* ReplayKit.framework in Frameworks */,
 				9B53C189212BB11800497907 /* CoreTelephony.framework in Frameworks */,
@@ -143,6 +146,7 @@
 		9B53C17D212BB0E100497907 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9BFAE42721A65CFF005228C6 /* libiconv.tbd */,
 				9BCB1373214A357F00DD0724 /* libsqlite3.tbd */,
 				9B53C18A212BB12400497907 /* ReplayKit.framework */,
 				9B53C188212BB11800497907 /* CoreTelephony.framework */,
@@ -407,7 +411,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4SZ6BRJK5P;
+				DEVELOPMENT_TEAM = 7XP66VHL84;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../TTTLib";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/TTTLive/TTTLive-Prefix.pch";
@@ -427,9 +431,9 @@
 					"-lWeChatSDK",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.3ttech.TTTLive;
+				PRODUCT_BUNDLE_IDENTIFIER = cn.3ttech.TTTLiveChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -438,7 +442,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4SZ6BRJK5P;
+				DEVELOPMENT_TEAM = 7XP66VHL84;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../TTTLib";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/TTTLive/TTTLive-Prefix.pch";
@@ -458,9 +462,9 @@
 					"-lWeChatSDK",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.3ttech.TTTLive;
+				PRODUCT_BUNDLE_IDENTIFIER = cn.3ttech.TTTLiveChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

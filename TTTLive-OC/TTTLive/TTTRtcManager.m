@@ -37,7 +37,8 @@ static id _manager;
 {
     self = [super init];
     if (self) {
-        _rtcEngine = [TTTRtcEngineKit sharedEngineWithAppId:@"a967ac491e3acf92eed5e1b5ba641ab7" delegate:nil];
+        NSString *appId = <#name#>;
+        _rtcEngine = [TTTRtcEngineKit sharedEngineWithAppId:appId delegate:nil];
         _me = [[TTTUser alloc] initWith:0];
         _localProfile = TTTRtc_VideoProfile_Default;
         _cdnProfile = TTTRtc_VideoProfile_Default;
@@ -45,5 +46,15 @@ static id _manager;
     return self;
 }
 
-
+- (UIImage *)getVoiceImage:(NSUInteger)level {
+    UIImage *image = nil;
+    if (level < 4) {
+        image = [UIImage imageNamed:@"volume_1"];
+    } else if (level < 7) {
+        image = [UIImage imageNamed:@"volume_2"];
+    } else {
+        image = [UIImage imageNamed:@"volume_3"];
+    }
+    return image;
+}
 @end

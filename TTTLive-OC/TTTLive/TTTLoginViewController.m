@@ -15,6 +15,7 @@ static NSString *const TTTH265 = @"?trans=1";
 @property (weak, nonatomic) IBOutlet UIButton *cdnBtn;
 @property (weak, nonatomic) IBOutlet UITextField *roomIDTF;
 @property (weak, nonatomic) IBOutlet UILabel *websiteLabel;
+
 @property (nonatomic, weak) UIButton *roleSelectedBtn;
 @property (nonatomic, assign) int64_t uid;
 @end
@@ -25,8 +26,7 @@ static NSString *const TTTH265 = @"?trans=1";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _roleSelectedBtn = _anchorBtn;
-    NSString *websitePrefix = @"http://www.3ttech.cn ";
-    _websiteLabel.text = [websitePrefix stringByAppendingString:TTTRtcEngineKit.getSdkVersion];
+    _websiteLabel.text = TTTRtcEngineKit.getSdkVersion;
     _uid = arc4random() % 100000 + 1;
     int64_t roomID = [[NSUserDefaults standardUserDefaults] stringForKey:@"ENTERROOMID"].integerValue;
     if (roomID == 0) {
@@ -38,9 +38,9 @@ static NSString *const TTTH265 = @"?trans=1";
 - (IBAction)roleBtnsAction:(UIButton *)sender {
     if (sender.isSelected) { return; }
     _roleSelectedBtn.selected = NO;
-    _roleSelectedBtn.backgroundColor = UIColor.blackColor;
+    _roleSelectedBtn.backgroundColor = [UIColor colorWithRed:139 / 255.0 green:39 / 255.0 blue:54 / 255.0 alpha:1];
     sender.selected = YES;
-    sender.backgroundColor = UIColor.cyanColor;
+    sender.backgroundColor = [UIColor colorWithRed:1 green:245 / 255.0 blue:11 / 255.0 alpha:1];
     _roleSelectedBtn = sender;
     _cdnBtn.hidden = sender != _anchorBtn;
 }
@@ -62,7 +62,7 @@ static NSString *const TTTH265 = @"?trans=1";
     TTTRtcEngineKit *rtcEngine = TTManager.rtcEngine;
     rtcEngine.delegate = self;
     [rtcEngine setChannelProfile:TTTRtc_ChannelProfile_LiveBroadcasting];
-    [rtcEngine setClientRole:clientRole withKey:nil];
+    [rtcEngine setClientRole:clientRole];
     [rtcEngine enableAudioVolumeIndication:200 smooth:3];
     BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
     if (clientRole == TTTRtc_ClientRole_Anchor) {
@@ -86,6 +86,7 @@ static NSString *const TTTH265 = @"?trans=1";
         [rtcEngine enableLocalVideo:NO];
         [rtcEngine muteLocalAudioStream:YES];
     }
+    
     [rtcEngine joinChannelByKey:nil channelName:_roomIDTF.text uid:_uid joinSuccess:nil];
 }
 
@@ -132,7 +133,7 @@ static NSString *const TTTH265 = @"?trans=1";
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [_roomIDTF resignFirstResponder];
+    [self.view endEditing:YES];
 }
 #pragma mark - TTTRtcEngineDelegate
 -(void)rtcEngine:(TTTRtcEngineKit *)engine didJoinChannel:(NSString *)channel withUid:(int64_t)uid elapsed:(NSInteger)elapsed {

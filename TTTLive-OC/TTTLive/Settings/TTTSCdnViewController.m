@@ -37,7 +37,7 @@ typedef enum : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"1080P", @"自定义"];
+    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"自定义"];
     _encodeTypes = @[@"H264", @"H265"];
     _channelTypes = @[@"48kHz-单声道", @"44.1kHz-双声道"];
     //
@@ -53,7 +53,7 @@ typedef enum : NSUInteger {
     BOOL isCustom = TTManager.cdnCustom.isCustom;
     [self refreshState:isCustom profile:TTManager.cdnProfile];
     if (isCustom) {
-        _profileIndex = 7;
+        _profileIndex = 6;
         [_pickView selectRow:_profileIndex inComponent:0 animated:YES];
         TTTCustomVideoProfile custom = TTManager.cdnCustom;
         _videoSizeTF.text = [NSString stringWithFormat:@"%.0fx%.0f", custom.videoSize.width, custom.videoSize.height];
@@ -144,7 +144,7 @@ typedef enum : NSUInteger {
     NSInteger index = [_pickView selectedRowInComponent:0];
     if (_pickType == PickerTypeSize) {
         TTTRtcVideoProfile profile = index * 10;
-        [self refreshState:index == 7 profile:profile];
+        [self refreshState:index == 6 profile:profile];
     } else if (_pickType == PickerTypeEncode) {
         _encodeTF.text = _encodeTypes[index];
         _h265 = index == 1;

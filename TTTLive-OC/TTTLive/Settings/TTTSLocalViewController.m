@@ -24,12 +24,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"1080P", @"自定义"];
+    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"自定义"];
     _audioSwitch.on = TTManager.isHighQualityAudio;
     BOOL isCustom = TTManager.localCustomProfile.isCustom;
     [self refreshState:isCustom profile:TTManager.localProfile];
     if (isCustom) {
-        [_pickView selectRow:7 inComponent:0 animated:YES];
+        [_pickView selectRow:6 inComponent:0 animated:YES];
         TTTCustomVideoProfile custom = TTManager.localCustomProfile;
         _videoSizeTF.text = [NSString stringWithFormat:@"%.0fx%.0f", custom.videoSize.width, custom.videoSize.height];
         _videoBitrateTF.text = [NSString stringWithFormat:@"%lu", custom.videoBitRate];
@@ -56,7 +56,11 @@
         if (_videoFpsTF.text.longLongValue <= 0) {
             return @"请输入正确的本地帧率";
         }
-        TTTCustomVideoProfile profile = {YES, CGSizeMake(sizes[0].longLongValue, sizes[1].longLongValue), _videoBitrateTF.text.longLongValue, _videoFpsTF.text.longLongValue};
+        long long fps = _videoFpsTF.text.longLongValue;
+        if (fps < 5 || fps >= 40) {
+            fps = 15;
+        }
+        TTTCustomVideoProfile profile = {YES, CGSizeMake(sizes[0].longLongValue, sizes[1].longLongValue), _videoBitrateTF.text.integerValue, fps};
         TTManager.localCustomProfile = profile;
     } else {
         TTTCustomVideoProfile profile = {NO, CGSizeZero, 0, 0};
@@ -97,7 +101,7 @@
     _pickBGView.hidden = YES;
     NSInteger index = [_pickView selectedRowInComponent:0];
     TTTRtcVideoProfile profile = index * 10;
-    [self refreshState:index == 7 profile:profile];
+    [self refreshState:index == 6 profile:profile];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

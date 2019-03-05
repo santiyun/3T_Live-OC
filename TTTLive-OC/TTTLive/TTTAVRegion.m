@@ -38,24 +38,11 @@
     sender.selected = !sender.isSelected;
     TTManager.me.mutedSelf = sender.isSelected;
     [TTManager.rtcEngine muteLocalAudioStream:sender.isSelected];
-    [_voiceBtn setImage:[UIImage imageNamed:sender.isSelected ? @"voice_close" : @"voice_small"] forState:UIControlStateNormal];
+    [_voiceBtn setImage:[UIImage imageNamed:sender.isSelected ? @"audio_close" : @"audio_small"] forState:UIControlStateNormal];
 }
 
 - (IBAction)switchCamera:(id)sender {
     [TTManager.rtcEngine switchCamera];
-}
-
-
-- (UIImage *)getVoiceImage:(NSUInteger)audioLevel {
-    UIImage *image = nil;
-    if (audioLevel < 4) {
-        image = [UIImage imageNamed:@"voice_small"];
-    } else if (audioLevel < 7) {
-        image = [UIImage imageNamed:@"voice_middle"];
-    } else {
-        image = [UIImage imageNamed:@"voice_big"];
-    }
-    return image;
 }
 
 - (TTTVideoPosition *)videoPosition {
@@ -73,9 +60,10 @@
 }
 #pragma mark - public
 - (void)configureRegion:(TTTUser *)user {
+//    self.hidden = NO;
     self.user = user;
     _backgroundView.alpha = 1;
-    [_voiceBtn setImage:[UIImage imageNamed:@"voice_small"] forState:UIControlStateNormal];
+    [_voiceBtn setImage:[UIImage imageNamed:@"audio_small"] forState:UIControlStateNormal];
     _idLabel.hidden = NO;
     _voiceBtn.hidden = NO;
     _audioStatsLabel.hidden = NO;
@@ -98,6 +86,7 @@
 }
 
 - (void)closeRegion {
+//    self.hidden = YES;
     _backgroundView.alpha = 0.7;
     _idLabel.hidden = YES;
     _voiceBtn.hidden = YES;
@@ -110,7 +99,7 @@
 
 - (void)reportAudioLevel:(NSUInteger)level {
     if (_user.mutedSelf) { return; }
-    [_voiceBtn setImage:[self getVoiceImage:level] forState:UIControlStateNormal];
+    [_voiceBtn setImage:[TTManager getVoiceImage:level] forState:UIControlStateNormal];
 }
 
 - (void)setLocalAudioStats:(NSUInteger)stats {
@@ -130,6 +119,6 @@
 }
 
 - (void)mutedSelf:(BOOL)mute {
-    [_voiceBtn setImage:[UIImage imageNamed:mute ? @"speaking_closed" : @"voice_small"] forState:UIControlStateNormal];
+    [_voiceBtn setImage:[UIImage imageNamed:mute ? @"muted" : @"audio_small"] forState:UIControlStateNormal];
 }
 @end

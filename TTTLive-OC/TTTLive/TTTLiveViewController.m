@@ -97,22 +97,27 @@
 
 - (IBAction)wxShare:(UIButton *)sender {
     _wxView.hidden = YES;
-    if ([WXApi isWXAppInstalled]) {
-        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-//        req.bText = YES;
-        WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"连麦直播";
-        message.description = [NSString stringWithFormat:@"三体云联邀请你加入直播间：%lld", TTManager.roomID];
-        message.thumbData = UIImagePNGRepresentation([UIImage imageNamed:@"wx_logo"]);
-        WXWebpageObject *object = [WXWebpageObject object];
-        object.webpageUrl = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull1.3ttech.cn/sdk/%lld.flv&hls=http://pull1.3ttech.cn/sdk/%lld/.m3u8", TTManager.roomID, TTManager.roomID];
-        message.mediaObject = object;
-        req.message = message;
-        //[@"rtmp://pull.3ttech.cn/sdk/" stringByAppendingFormat:@"%lld", TTManager.roomID];
-        req.scene = sender.tag == 101 ? WXSceneSession : WXSceneTimeline;
-        [WXApi sendReq:req];
-    } else {
-        [self showToast:@"手机未安装微信"];
+    NSString *shareURL = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull.3ttech.cn/sdk/%lld.flv&hls=http://pull.3ttech.cn/sdk/%lld/.m3u8", TTManager.roomID, TTManager.roomID];
+    if (sender.tag < 103) {
+        if ([WXApi isWXAppInstalled]) {
+            SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+            WXMediaMessage *message = [WXMediaMessage message];
+            message.title = @"连麦直播";
+            message.description = [NSString stringWithFormat:@"三体云联邀请你加入直播间：%lld", TTManager.roomID];
+            message.thumbData = UIImagePNGRepresentation([UIImage imageNamed:@"wx_logo"]);
+            WXWebpageObject *object = [WXWebpageObject object];
+            object.webpageUrl = shareURL;
+            message.mediaObject = object;
+            req.message = message;
+            //[@"rtmp://pull.3ttech.cn/sdk/" stringByAppendingFormat:@"%lld", TTManager.roomID];
+            req.scene = sender.tag == 101 ? WXSceneSession : WXSceneTimeline;
+            [WXApi sendReq:req];
+        } else {
+            [self showToast:@"手机未安装微信"];
+        }
+    } else if (sender.tag == 103) {
+        UIPasteboard.generalPasteboard.string = shareURL;
+        [self showToast:@"复制成功"];
     }
 }
 
@@ -155,13 +160,14 @@
         int64_t uid = [obj[@"id"] longLongValue];
         TTTUser *user = [self getUser:uid];
         if (user.clientRole == TTTRtc_ClientRole_Broadcaster) {
-            if ([self getAVRegion:uid]) { return; }
-            TTTVideoPosition *videoPosition = [[TTTVideoPosition alloc] init];
-            videoPosition.x = [obj[@"x"] doubleValue];
-            videoPosition.y = [obj[@"y"] doubleValue];
-            videoPosition.w = [obj[@"w"] doubleValue];
-            videoPosition.h = [obj[@"h"] doubleValue];
-            [[self positionAVRegion:videoPosition] configureRegion:user];
+            if (![self getAVRegion:uid]) {
+                TTTVideoPosition *videoPosition = [[TTTVideoPosition alloc] init];
+                videoPosition.x = [obj[@"x"] doubleValue];
+                videoPosition.y = [obj[@"y"] doubleValue];
+                videoPosition.w = [obj[@"w"] doubleValue];
+                videoPosition.h = [obj[@"h"] doubleValue];
+                [[self positionAVRegion:videoPosition] configureRegion:user];
+            }
         }
     }
 }
@@ -236,10 +242,19 @@
 }
 
 - (void)rtcEngineConnectionDidLost:(TTTRtcEngineKit *)engine {
-    [self.view.window showToast:@"ConnectionDidLost"];
+    [TTProgressHud showHud:self.view message:@"网络链接丢失，正在重连..."];
+}
+
+- (void)rtcEngineReconnectServerTimeout:(TTTRtcEngineKit *)engine {
+    [TTProgressHud hideHud:self.view];
+    [self.view.window showToast:@"网络丢失，请检查网络"];
     [engine leaveChannel:nil];
     [engine stopPreview];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)rtcEngineReconnectServerSucceed:(TTTRtcEngineKit *)engine {
+    [TTProgressHud hideHud:self.view];
 }
 
 - (void)rtcEngine:(TTTRtcEngineKit *)engine didKickedOutOfUid:(int64_t)uid reason:(TTTRtcKickedOutReason)reason {
@@ -355,17 +370,9 @@
 - (UIImage *)getVoiceImage:(NSUInteger)level {
     //    BOOL speakerphone = _routing != TTTRtc_AudioOutput_Headset;
     if (TTManager.me.mutedSelf && TTManager.me.isAnchor) {
-        return [UIImage imageNamed:@"voice_close"];
+        return [UIImage imageNamed:@"audio_close"];
     }
-    UIImage *image = nil;
-    if (level < 4) {
-        image = [UIImage imageNamed:@"voice_small"];
-    } else if (level < 7) {
-        image = [UIImage imageNamed:@"voice_middle"];
-    } else {
-        image = [UIImage imageNamed:@"voice_big"];
-    }
-    return image;
+    return [TTManager getVoiceImage:level];
 }
 
 @end
