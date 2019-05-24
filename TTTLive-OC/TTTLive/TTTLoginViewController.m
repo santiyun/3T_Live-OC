@@ -26,7 +26,8 @@ static NSString *const TTTH265 = @"?trans=1";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _roleSelectedBtn = _anchorBtn;
-    _websiteLabel.text = TTTRtcEngineKit.getSdkVersion;
+    NSString *dateStr = NSBundle.mainBundle.infoDictionary[@"CFBundleVersion"];
+    _websiteLabel.text = [TTTRtcEngineKit.getSdkVersion stringByAppendingFormat:@"__%@", dateStr];
     _uid = arc4random() % 100000 + 1;
     int64_t roomID = [[NSUserDefaults standardUserDefaults] stringForKey:@"ENTERROOMID"].integerValue;
     if (roomID == 0) {
@@ -64,6 +65,7 @@ static NSString *const TTTH265 = @"?trans=1";
     [rtcEngine setChannelProfile:TTTRtc_ChannelProfile_LiveBroadcasting];
     [rtcEngine setClientRole:clientRole];
     [rtcEngine enableAudioVolumeIndication:200 smooth:3];
+    [rtcEngine setLogFilter:TTTRtc_LogFilter_Debug];
     BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
     if (clientRole == TTTRtc_ClientRole_Anchor) {
         if (TTManager.isCustom) {//自定义设置
@@ -116,7 +118,7 @@ static NSString *const TTTH265 = @"?trans=1";
     }
     //高音质
     if (TTManager.isHighQualityAudio) {
-        [rtcEngine setHighQualityAudioParametersWithFullband:YES stereo:YES fullBitrate:YES];
+        [rtcEngine setPreferAudioCodec:TTTRtc_AudioCodec_AAC bitrate:96 channels:1];
     }
     //cdn
     TTTCustomVideoProfile custom = TTManager.cdnCustom;
@@ -155,6 +157,9 @@ static NSString *const TTTH265 = @"?trans=1";
             break;
         case TTTRtc_Error_InvalidChannelName:
             errorInfo = @"Invalid channel name";
+            break;
+        case TTTRtc_Error_Enter_NoAnchor:
+            errorInfo = @"房间内无主播";
             break;
         default:
             errorInfo = [NSString stringWithFormat:@"未知错误：%zd",errorCode];

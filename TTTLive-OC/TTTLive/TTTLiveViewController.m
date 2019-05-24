@@ -25,6 +25,7 @@
 @property (nonatomic, strong) NSMutableArray<TTTUser *> *users;
 @property (nonatomic, strong) NSMutableArray<TTTAVRegion *> *avRegions;
 @property (nonatomic, strong) TTTRtcVideoCompositingLayout *videoLayout;
+
 @end
 
 @implementation TTTLiveViewController
@@ -59,7 +60,7 @@
             _videoLayout.canvasHeight = TTManager.cdnCustom.videoSize.width;
         } else {
             //360P 竖屏模式
-            _videoLayout.canvasWidth = 360;
+            _videoLayout.canvasWidth = 352;
             _videoLayout.canvasHeight = 640;
         }
         _videoLayout.backgroundColor = @"#e8e6e8";
@@ -86,10 +87,13 @@
 }
 
 - (IBAction)exitChannel:(id)sender {
+    __weak TTTLiveViewController *weakSelf = self;
     UIAlertController *alert  = [UIAlertController alertControllerWithTitle:@"提示" message:@"您确定要退出房间吗？" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
     UIAlertAction *sureAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [TTManager.rtcEngine leaveChannel:nil];
+        [TTManager.rtcEngine stopPreview];
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
     }];
     [alert addAction:sureAction];
     [self presentViewController:alert animated:YES completion:nil];
@@ -97,7 +101,7 @@
 
 - (IBAction)wxShare:(UIButton *)sender {
     _wxView.hidden = YES;
-    NSString *shareURL = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull.3ttech.cn/sdk/%lld.flv&hls=http://pull.3ttech.cn/sdk/%lld/.m3u8", TTManager.roomID, TTManager.roomID];
+    NSString *shareURL = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull.3ttech.cn/sdk/%lld.flv&hls=http://pull.3ttech.cn/sdk/%lld.m3u8", TTManager.roomID, TTManager.roomID];
     if (sender.tag < 103) {
         if ([WXApi isWXAppInstalled]) {
             SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
@@ -128,6 +132,7 @@
 
 
 #pragma mark - TTTRtcEngineDelegate
+
 -(void)rtcEngine:(TTTRtcEngineKit *)engine didJoinedOfUid:(int64_t)uid clientRole:(TTTRtcClientRole)clientRole isVideoEnabled:(BOOL)isVideoEnabled elapsed:(NSInteger)elapsed {
     TTTUser *user = [[TTTUser alloc] initWith:uid];
     user.clientRole = clientRole;
@@ -232,15 +237,6 @@
     }
 }
 
-- (void)rtcEngine:(TTTRtcEngineKit *)engine firstRemoteVideoFrameDecodedOfUid:(int64_t)uid size:(CGSize)size elapsed:(NSInteger)elapsed {
-    //解码远端用户第一帧
-}
-
-- (void)rtcEngine:(TTTRtcEngineKit *)engine didLeaveChannelWithStats:(TTTRtcStats *)stats {
-    [engine stopPreview];
-    [self dismissViewControllerAnimated:true completion:nil];
-}
-
 - (void)rtcEngineConnectionDidLost:(TTTRtcEngineKit *)engine {
     [TTProgressHud showHud:self.view message:@"网络链接丢失，正在重连..."];
 }
@@ -289,6 +285,9 @@
             break;
     }
     [self.view.window showToast:errorInfo];
+    [engine leaveChannel:nil];
+    [engine stopPreview];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - helper mehtod

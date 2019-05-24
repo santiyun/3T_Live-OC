@@ -37,8 +37,7 @@ static id _manager;
 {
     self = [super init];
     if (self) {
-        NSString *appId = <#name#>;
-        _rtcEngine = [TTTRtcEngineKit sharedEngineWithAppId:appId delegate:nil];
+        _rtcEngine = [TTTRtcEngineKit sharedEngineWithAppId:<#name#> delegate:nil];
         _me = [[TTTUser alloc] initWith:0];
         _localProfile = TTTRtc_VideoProfile_Default;
         _cdnProfile = TTTRtc_VideoProfile_Default;
