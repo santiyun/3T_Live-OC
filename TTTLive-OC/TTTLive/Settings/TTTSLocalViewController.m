@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"自定义"];
+    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"1080P", @"自定义"];
     _audioSwitch.on = TTManager.isHighQualityAudio;
     BOOL isCustom = TTManager.localCustomProfile.isCustom;
     [self refreshState:isCustom profile:TTManager.localProfile];
@@ -101,7 +101,7 @@
     _pickBGView.hidden = YES;
     NSInteger index = [_pickView selectedRowInComponent:0];
     TTTRtcVideoProfile profile = index * 10;
-    [self refreshState:index == 6 profile:profile];
+    [self refreshState:index == 7 profile:profile];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

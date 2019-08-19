@@ -24,6 +24,7 @@ static CGSize TTTVideoMixSize[] = {
     [TTTRtc_VideoProfile_360P] = {640, 360},
     [TTTRtc_VideoProfile_480P] = {640, 480},
     [TTTRtc_VideoProfile_720P] = {1280, 720},
+    [TTTRtc_VideoProfile_1080P] = {1920, 1080},
 };
 
 static NSString *videoSizeStr[] = {
@@ -31,8 +32,9 @@ static NSString *videoSizeStr[] = {
     [TTTRtc_VideoProfile_180P]  = @"320x180",
     [TTTRtc_VideoProfile_240P]  = @"320x240",
     [TTTRtc_VideoProfile_360P]  = @"640x360",
-    [TTTRtc_VideoProfile_480P]  = @"640x480",
+    [TTTRtc_VideoProfile_480P]  = @"848x480",
     [TTTRtc_VideoProfile_720P]  = @"1280x720",
+    [TTTRtc_VideoProfile_1080P] = @"1920x1080",
 };
 
 static NSString *videoBitrateStr[] = {
@@ -42,6 +44,7 @@ static NSString *videoBitrateStr[] = {
     [TTTRtc_VideoProfile_360P]  = @"400",
     [TTTRtc_VideoProfile_480P]  = @"500",
     [TTTRtc_VideoProfile_720P]  = @"1130",
+    [TTTRtc_VideoProfile_1080P] = @"2080",
 };
 
 @interface TTTRtcManager : NSObject

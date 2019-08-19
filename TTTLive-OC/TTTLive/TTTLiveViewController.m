@@ -98,10 +98,10 @@
     [alert addAction:sureAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
-
+//http://3ttech.cn/3tplayer.html?flv=http://pull.3ttest.cn/sdk2/582.flv&hls=http://pull.3ttest.cn/sdk2/582.m3u8
 - (IBAction)wxShare:(UIButton *)sender {
     _wxView.hidden = YES;
-    NSString *shareURL = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull.3ttech.cn/sdk/%lld.flv&hls=http://pull.3ttech.cn/sdk/%lld.m3u8", TTManager.roomID, TTManager.roomID];
+    NSString *shareURL = [NSString stringWithFormat:@"http://3ttech.cn/3tplayer.html?flv=http://pull.3ttest.cn/sdk2/%lld.flv&hls=http://pull.3ttest.cn/sdk2/%lld.m3u8", TTManager.roomID, TTManager.roomID];
     if (sender.tag < 103) {
         if ([WXApi isWXAppInstalled]) {
             SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
@@ -132,7 +132,6 @@
 
 
 #pragma mark - TTTRtcEngineDelegate
-
 -(void)rtcEngine:(TTTRtcEngineKit *)engine didJoinedOfUid:(int64_t)uid clientRole:(TTTRtcClientRole)clientRole isVideoEnabled:(BOOL)isVideoEnabled elapsed:(NSInteger)elapsed {
     TTTUser *user = [[TTTUser alloc] initWith:uid];
     user.clientRole = clientRole;

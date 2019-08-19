@@ -74,7 +74,7 @@ static NSString *const TTTH265 = @"?trans=1";
             [rtcEngine enableVideo];
             [rtcEngine muteLocalAudioStream:NO];
             TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
-            NSString *pushURL = [@"rtmp://push.3ttech.cn/sdk/" stringByAppendingFormat:@"%@", _roomIDTF.text];
+            NSString *pushURL = [@"rtmp://push.3ttest.cn/sdk2/" stringByAppendingFormat:@"%@", _roomIDTF.text];
             //pull -- rtmp://pull.3ttech.cn/sdk/_roomIDTF.text
             [builder setPublisherUrl:pushURL];
             [rtcEngine configPublisher:builder.build];
@@ -89,6 +89,7 @@ static NSString *const TTTH265 = @"?trans=1";
         [rtcEngine muteLocalAudioStream:YES];
     }
     
+    
     [rtcEngine joinChannelByKey:nil channelName:_roomIDTF.text uid:_uid joinSuccess:nil];
 }
 
@@ -97,7 +98,7 @@ static NSString *const TTTH265 = @"?trans=1";
     [rtcEngine enableVideo];
     [rtcEngine muteLocalAudioStream:NO];
     TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
-    NSString *pushURL = [@"rtmp://push.3ttech.cn/sdk/" stringByAppendingString:_roomIDTF.text];
+    NSString *pushURL = [@"rtmp://push.3ttest.cn/sdk2/" stringByAppendingString:_roomIDTF.text];
     //h265
     if (TTManager.h265) {
         pushURL = [pushURL stringByAppendingString:TTTH265];
