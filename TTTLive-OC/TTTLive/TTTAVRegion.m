@@ -48,7 +48,7 @@
 - (TTTVideoPosition *)videoPosition {
     if (!_videoPosition) {
         _videoPosition = [[TTTVideoPosition alloc] init];
-        CGRect convertFrame = [self.superview convertRect:self.frame toView:self.superview.superview.superview];
+        CGRect convertFrame = [self.superview convertRect:self.frame toView:nil];
         CGFloat width = UIScreen.mainScreen.bounds.size.width;
         CGFloat height = UIScreen.mainScreen.bounds.size.height;
         _videoPosition.x = self.frame.origin.x / width;

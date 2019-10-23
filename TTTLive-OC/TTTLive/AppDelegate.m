@@ -17,6 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
     [WXApi registerApp:@"wxf49788754a287d14"];
     return YES;
 }

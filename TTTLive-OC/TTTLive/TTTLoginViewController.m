@@ -48,7 +48,7 @@ static NSString *const TTTH265 = @"?trans=1";
 
 - (IBAction)enterChannel:(id)sender {
     if (_roomIDTF.text.integerValue == 0 || _roomIDTF.text.length >= 19) {
-        [self showToast:@"请输入19位以内的房间ID"];
+        [self showToast:@"请输入大于0，19位以内的房间ID"];
         return;
     }
     int64_t rid = _roomIDTF.text.longLongValue;
@@ -65,7 +65,7 @@ static NSString *const TTTH265 = @"?trans=1";
     [rtcEngine setChannelProfile:TTTRtc_ChannelProfile_LiveBroadcasting];
     [rtcEngine setClientRole:clientRole];
     [rtcEngine enableAudioVolumeIndication:200 smooth:3];
-    [rtcEngine setLogFilter:TTTRtc_LogFilter_Debug];
+//    [rtcEngine setLogFilter:TTTRtc_LogFilter_Debug];
     BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
     if (clientRole == TTTRtc_ClientRole_Anchor) {
         if (TTManager.isCustom) {//自定义设置

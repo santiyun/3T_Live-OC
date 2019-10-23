@@ -19,7 +19,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *anchorIdLabel;
 @property (weak, nonatomic) IBOutlet UILabel *audioStatsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *videoStatsLabel;
-@property (weak, nonatomic) IBOutlet UIView *avRegionsView;
+@property (weak, nonatomic) IBOutlet UIStackView *regionsView;
+
 @property (weak, nonatomic) IBOutlet UIView *wxView;
 
 @property (nonatomic, strong) NSMutableArray<TTTUser *> *users;
@@ -37,10 +38,8 @@
     
     _roomIDLabel.text = [NSString stringWithFormat:@"房号: %lld", TTManager.roomID];
     [_users addObject:TTManager.me];
-    for (UIView *subView in _avRegionsView.subviews) {
-        if ([subView isKindOfClass:[TTTAVRegion class]]) {
-            [_avRegions addObject:(TTTAVRegion *)subView];
-        }
+    for (UIView *stack in _regionsView.subviews) {
+        [_avRegions addObjectsFromArray:stack.subviews];
     }
     TTManager.rtcEngine.delegate = self;
     if (TTManager.me.clientRole == TTTRtc_ClientRole_Anchor) {
