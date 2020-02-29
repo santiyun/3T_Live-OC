@@ -43,24 +43,36 @@
     if ([_videoTitleTF.text isEqualToString:_videoSizes.lastObject]) {
         NSArray<NSString *> *sizes = [_videoSizeTF.text componentsSeparatedByString:@"x"];
         if (sizes.count != 2) {
-            return @"请输入正确的本地视频尺寸";
+            return @"请输入正确的视频参数";
         }
         if (sizes[0].longLongValue <= 0 || sizes[1].longLongValue <= 0) {
-            return @"请输入正确的本地视频尺寸";
+            return @"请输入正确的视频参数";
+        }
+        
+        if (sizes[0].longLongValue > 1920) {
+            return @"视频宽最大为1920";
+        }
+        
+        if (sizes[1].longLongValue > 1080) {
+            return @"视频高最大为1080";
         }
         
         if (_videoBitrateTF.text.longLongValue <= 0) {
-            return @"请输入正确的本地码率";
+            return @"请输入正确码率参数";
+        }
+        
+        if (_videoBitrateTF.text.longLongValue > 5000) {
+            return @"码率不能大于5000";
         }
         
         if (_videoFpsTF.text.longLongValue <= 0) {
-            return @"请输入正确的本地帧率";
+            return @"请输入正确帧率参数";
         }
-        long long fps = _videoFpsTF.text.longLongValue;
-        if (fps < 5 || fps >= 40) {
-            fps = 15;
+        
+        if (_videoFpsTF.text.longLongValue > 25) {
+            return @"帧率不能大于25";
         }
-        TTTCustomVideoProfile profile = {YES, CGSizeMake(sizes[0].longLongValue, sizes[1].longLongValue), _videoBitrateTF.text.integerValue, fps};
+        TTTCustomVideoProfile profile = {YES, CGSizeMake(sizes[0].longLongValue, sizes[1].longLongValue), _videoBitrateTF.text.integerValue, _videoFpsTF.text.longLongValue};
         TTManager.localCustomProfile = profile;
     } else {
         TTTCustomVideoProfile profile = {NO, CGSizeZero, 0, 0};
@@ -69,7 +81,6 @@
         TTManager.localProfile = index * 10;
     }
     TTManager.isHighQualityAudio = _audioSwitch.isOn;
-    [self dismissViewControllerAnimated:YES completion:nil];
     return nil;
 }
 

@@ -55,6 +55,7 @@
         _videoPosition.y = convertFrame.origin.y / height;
         _videoPosition.w = self.frame.size.width / width;
         _videoPosition.h = self.frame.size.height / height;
+        _videoPosition.row = self.superview.tag;
     }
     return _videoPosition;
 }

@@ -14,12 +14,12 @@ class TLAVPosition: NSObject {
     var y: Double = 0
     var w: Double = 0
     var h: Double = 0
-    
-    var row: Int {
-        get {
-            return Int(round( (1 - y) / h))
-        }
-    }
+    var row = 0
+//    var row: Int {
+//        get {
+//            return Int(round( (1 - y) / h))
+//        }
+//    }
     
     var column: Int {
         get {

@@ -37,8 +37,8 @@ static id _manager;
 {
     self = [super init];
     if (self) {
-        //a967ac491e3acf92eed5e1b5ba641ab7
-        _rtcEngine = [TTTRtcEngineKit sharedEngineWithAppId:<#name#> delegate:nil];
+        //输入申请的三体云AppId
+        _rtcEngine = [TTTRtcEngineKit sharedEngineWithAppId:<#AppId#> delegate:nil];
         _me = [[TTTUser alloc] initWith:0];
         _localProfile = TTTRtc_VideoProfile_Default;
         _cdnProfile = TTTRtc_VideoProfile_Default;

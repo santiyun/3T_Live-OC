@@ -13,6 +13,6 @@
 @property (nonatomic, assign) double y;
 @property (nonatomic, assign) double w;
 @property (nonatomic, assign) double h;
-@property (nonatomic, readonly) int row;
+@property (nonatomic) int row;
 @property (nonatomic, readonly) int column;
 @end

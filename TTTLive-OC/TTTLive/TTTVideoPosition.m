@@ -9,9 +9,9 @@
 #import "TTTVideoPosition.h"
 
 @implementation TTTVideoPosition
-- (int)row {
-    return (int)round((1-_y)/_h);
-}
+//- (int)row {
+//    return (int)round((1-_y)/_h);
+//}
 
 - (int)column {
     return (int)round((_x+_w)/_w);

@@ -41,24 +41,44 @@ class TLSLViewController: UIViewController {
         if videoTitleTF.text == "自定义" {
             //videoSize必须以x分开两个数值
             if videoSizeTF.text == nil || videoSizeTF.text?.count == 0 {
-                return "请输入正确的本地视频尺寸"
+                return "请输入正确参数"
             }
             
             let sizes = videoSizeTF.text?.components(separatedBy: "x")
             if sizes?.count != 2 {
-                return "请输入正确的本地视频尺寸"
+                return "请输入正确视频参数"
             }
             
-            guard let sizeW = Int(sizes![0]), let sizeH = Int(sizes![1]) else {
-                return "请输入正确的本地视频尺寸"
+            guard let sizeW = Int(sizes![0]), sizeW > 0 else {
+                return "请输入正确视频参数"
             }
             
-            guard let bitrate = Int(videoBitrateTF.text!) else {
-                return "请输入正确的本地码率"
+            if sizeW > 1920 {
+                return "视频宽最大为1920"
             }
             
-            guard let fps = Int(videoFpsTF.text!) else {
-                return "请输入正确的本地帧率"
+            guard let sizeH = Int(sizes![1]), sizeH > 0 else {
+                return "请输入正确视频参数"
+            }
+            
+            if sizeH > 1080 {
+                return "视频高最大为1080"
+            }
+            
+            guard let bitrate = Int(videoBitrateTF.text!), bitrate > 0 else {
+                return "请输入正确码率参数"
+            }
+            
+            if bitrate > 5000 {
+                return "码率不能大于5000"
+            }
+            
+            guard let fps = Int(videoFpsTF.text!), fps > 0 else {
+                return "请输入正确帧率参数"
+            }
+            
+            if fps > 25 {
+                return "帧率不能大于25"
             }
             
             AppManager.localCustomProfile = (true,CGSize(width: sizeW, height: sizeH),bitrate,fps)

@@ -44,7 +44,6 @@
     TTManager.rtcEngine.delegate = self;
     if (TTManager.me.clientRole == TTTRtc_ClientRole_Anchor) {
         _anchorIdLabel.text = [NSString stringWithFormat:@"主播ID: %lld", TTManager.me.uid];
-        [TTManager.rtcEngine startPreview];
         TTTRtcVideoCanvas *videoCanvas = [[TTTRtcVideoCanvas alloc] init];
         videoCanvas.renderMode = TTTRtc_Render_Adaptive;
         videoCanvas.uid = TTManager.me.uid;
@@ -169,6 +168,7 @@
                 videoPosition.y = [obj[@"y"] doubleValue];
                 videoPosition.w = [obj[@"w"] doubleValue];
                 videoPosition.h = [obj[@"h"] doubleValue];
+                videoPosition.row = (int)round((1-videoPosition.y)/videoPosition.h);
                 [[self positionAVRegion:videoPosition] configureRegion:user];
             }
         }

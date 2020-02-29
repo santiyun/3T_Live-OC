@@ -35,7 +35,6 @@ class TLChatViewController: UIViewController {
         AppManager.rtcEngine.delegate = self
         if AppManager.me.clientRole == .clientRole_Anchor {
             anchorIdLabel.text = "房主ID: \(AppManager.me.uid)"
-            AppManager.rtcEngine.startPreview()
             let videoCanvas = TTTRtcVideoCanvas()
             videoCanvas.uid = AppManager.me.uid
             videoCanvas.renderMode = .render_Adaptive
@@ -152,6 +151,7 @@ extension TLChatViewController: TTTRtcEngineDelegate {
                 videoPosition.y = pos["y"] as! Double
                 videoPosition.w = pos["w"] as! Double
                 videoPosition.h = pos["h"] as! Double
+                videoPosition.row = Int(round( (1 - videoPosition.y) / videoPosition.h))
                 positionPlayer(videoPosition)?.configureRegion(user)
             }
         }

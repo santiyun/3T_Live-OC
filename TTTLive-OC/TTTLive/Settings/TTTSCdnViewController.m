@@ -92,7 +92,6 @@ typedef enum : NSUInteger {
     }
     TTManager.h265 = _h265;
     TTManager.doubleChannel = _doubleChannel;
-    [self dismissViewControllerAnimated:YES completion:nil];
     return nil;
 }
 

@@ -30,6 +30,7 @@ class T3AVPlayer: UIView {
         position.y = Double(convertFrame!.origin.y / screenH)
         position.w = Double(bounds.size.width / screenW)
         position.h = Double(bounds.size.height / screenH)
+        position.row = superview!.tag
         return position
     }()
     

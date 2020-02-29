@@ -396,7 +396,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1021;
+				CURRENT_PROJECT_VERSION = 0229;
 				DEVELOPMENT_TEAM = 7XP66VHL84;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../TTTLib";
@@ -409,7 +409,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../TTTLib/WechtSDK";
-				MARKETING_VERSION = 2.4.0;
+				MARKETING_VERSION = 2.7.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					TTTPlayerKit,
@@ -435,7 +435,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1021;
+				CURRENT_PROJECT_VERSION = 0229;
 				DEVELOPMENT_TEAM = 7XP66VHL84;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../TTTLib";
@@ -448,7 +448,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../TTTLib/WechtSDK";
-				MARKETING_VERSION = 2.4.0;
+				MARKETING_VERSION = 2.7.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					TTTPlayerKit,

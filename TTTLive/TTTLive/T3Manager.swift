@@ -112,6 +112,7 @@ class T3Manager: NSObject {
     
     private override init() {
         super.init()
+        //输入申请的三体云AppId
         rtcEngine = TTTRtcEngineKit.sharedEngine(withAppId: <#name#>, delegate: nil)
     }
     

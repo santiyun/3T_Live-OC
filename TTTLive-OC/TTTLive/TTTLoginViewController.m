@@ -65,23 +65,23 @@ static NSString *const TTTH265 = @"?trans=1";
     [rtcEngine setChannelProfile:TTTRtc_ChannelProfile_LiveBroadcasting];
     [rtcEngine setClientRole:clientRole];
     [rtcEngine enableAudioVolumeIndication:200 smooth:3];
-//    [rtcEngine setLogFilter:TTTRtc_LogFilter_Debug];
     BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
     if (clientRole == TTTRtc_ClientRole_Anchor) {
         if (TTManager.isCustom) {//自定义设置
             [self customEnterChannel];
+            [rtcEngine startPreview];
         } else {
             [rtcEngine enableVideo];
+            [rtcEngine startPreview];
             [rtcEngine muteLocalAudioStream:NO];
-            TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
-            NSString *pushURL = [@"rtmp://push.3ttest.cn/sdk2/" stringByAppendingFormat:@"%@", _roomIDTF.text];
-            //pull -- rtmp://pull.3ttech.cn/sdk/_roomIDTF.text
-            [builder setPublisherUrl:pushURL];
-            [rtcEngine configPublisher:builder.build];
+            TTTPublisherConfiguration *config = [[TTTPublisherConfiguration alloc] init];
+            config.publishUrl = [@"rtmp://push.3ttest.cn/sdk2/" stringByAppendingFormat:@"%@", _roomIDTF.text];
+            [rtcEngine configPublisher:config];
             [rtcEngine setVideoProfile:TTTRtc_VideoProfile_360P swapWidthAndHeight:swapWH];
         }
     } else if (clientRole == TTTRtc_ClientRole_Broadcaster) {
         [rtcEngine enableVideo];
+        [rtcEngine startPreview];
         [rtcEngine muteLocalAudioStream:NO];
         [rtcEngine setVideoProfile:TTTRtc_VideoProfile_120P swapWidthAndHeight:swapWH];
     } else {
@@ -97,14 +97,13 @@ static NSString *const TTTH265 = @"?trans=1";
     TTTRtcEngineKit *rtcEngine = TTManager.rtcEngine;
     [rtcEngine enableVideo];
     [rtcEngine muteLocalAudioStream:NO];
-    TTTPublisherConfigurationBuilder *builder = [[TTTPublisherConfigurationBuilder alloc] init];
+    TTTPublisherConfiguration *config = [[TTTPublisherConfiguration alloc] init];
     NSString *pushURL = [@"rtmp://push.3ttest.cn/sdk2/" stringByAppendingString:_roomIDTF.text];
     //h265
     if (TTManager.h265) {
         pushURL = [pushURL stringByAppendingString:TTTH265];
     }
-    [builder setPublisherUrl:pushURL];
-    [rtcEngine configPublisher:builder.build];
+    config.publishUrl = pushURL;
     //local
     BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
     if (TTManager.localCustomProfile.isCustom) {
@@ -127,12 +126,14 @@ static NSString *const TTTH265 = @"?trans=1";
     if (swapWH) {
         videoSize = CGSizeMake(videoSize.height, videoSize.width);
     }
-    [rtcEngine setVideoMixerParams:videoSize videoFrameRate:custom.fps videoBitRate:custom.videoBitRate];
+    config.videoSize = videoSize;
+    config.videoFrameRate = custom.fps;
+    config.videoBitrate = custom.videoBitRate;
     if (TTManager.doubleChannel) {
-        [rtcEngine setAudioMixerParams:44100 channels:2];
-    } else {
-        [rtcEngine setAudioMixerParams:48000 channels:1];
-    }
+        config.samplerate = 44100;
+        config.channels = 2;
+    } 
+    [rtcEngine configPublisher:config];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

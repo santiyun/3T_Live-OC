@@ -73,17 +73,15 @@ class T3LoginViewController: UIViewController {
             } else {
                 rtcEngine?.enableVideo()
                 rtcEngine?.muteLocalAudioStream(false)
-                let builder = TTTPublisherConfigurationBuilder()
-                let pushUrl = "rtmp://push.3ttest.cn/sdk2/\(rid)"
-                
-                builder.setPublisherUrl(pushUrl)
-                rtcEngine?.configPublisher(builder.build())
-                //拉流地址--"rtmp://pull.3ttech.cn/sdk/\(rid)"
-                print("rtmp://pull.3ttest.cn/sdk2/\(rid)")
+                let config = TTTPublisherConfiguration()
+                config.publishUrl = "rtmp://push.3ttest.cn/sdk2/\(rid)"
+                rtcEngine?.configPublisher(config)
                 rtcEngine?.setVideoProfile(._VideoProfile_360P, swapWidthAndHeight: swapWH)
             }
+            rtcEngine?.startPreview()
         } else if clientRole == .clientRole_Broadcaster {
             rtcEngine?.enableVideo()
+            rtcEngine?.startPreview()
             rtcEngine?.muteLocalAudioStream(false)
             rtcEngine?.setVideoProfile(._VideoProfile_120P, swapWidthAndHeight: swapWH)
         }
@@ -94,14 +92,13 @@ class T3LoginViewController: UIViewController {
         let rtcEngine = AppManager.rtcEngine
         rtcEngine?.enableVideo()
         rtcEngine?.muteLocalAudioStream(false)
-        let builder = TTTPublisherConfigurationBuilder()
+        let config = TTTPublisherConfiguration()
         var pushUrl = "rtmp://push.3ttest.cn/sdk2/\(rid)"
         //h265
         if AppManager.h265 {
             pushUrl += TTTH265
         }
-        builder.setPublisherUrl(pushUrl)
-        rtcEngine?.configPublisher(builder.build())
+        config.publishUrl = pushUrl
         //local
         let swapWH = UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)
         if AppManager.localCustomProfile.isCustom {//自定义
@@ -124,12 +121,14 @@ class T3LoginViewController: UIViewController {
         if swapWH {
             videoSize = CGSize(width: videoSize.height, height: videoSize.width)
         }
-        rtcEngine?.setVideoMixerParams(videoSize, videoFrameRate: UInt(custom.fps), videoBitRate: UInt(custom.bitrate))
+        config.videoSize = videoSize
+        config.videoFrameRate = Int32(custom.fps)
+        config.videoBitrate = Int32(custom.bitrate)
         if AppManager.doubleChannel {
-            rtcEngine?.setAudioMixerParams(44100, channels: 2)
-        } else {
-            rtcEngine?.setAudioMixerParams(48000, channels: 1)
+            config.samplerate = 44100
+            config.channels = 2
         }
+        rtcEngine?.configPublisher(config)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
