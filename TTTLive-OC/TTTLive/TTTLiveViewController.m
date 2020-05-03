@@ -63,7 +63,6 @@
         }
         _videoLayout.backgroundColor = @"#e8e6e8";
     } else if (TTManager.me.clientRole == TTTRtc_ClientRole_Broadcaster) {
-        [TTManager.rtcEngine startPreview];
         _switchBtn.hidden = YES;
     }
     //必须确保UI更新完成，否则接受SEI可能找不到对应位置-iPhone5c

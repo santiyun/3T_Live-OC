@@ -70,15 +70,16 @@ class T3LoginViewController: UIViewController {
             //标识自定义本地或者cdn
             if AppManager.isCustom {
                 customEnterChannel(rid)
+                rtcEngine?.startPreview()
             } else {
                 rtcEngine?.enableVideo()
+                rtcEngine?.startPreview()
                 rtcEngine?.muteLocalAudioStream(false)
                 let config = TTTPublisherConfiguration()
                 config.publishUrl = "rtmp://push.3ttest.cn/sdk2/\(rid)"
                 rtcEngine?.configPublisher(config)
                 rtcEngine?.setVideoProfile(._VideoProfile_360P, swapWidthAndHeight: swapWH)
             }
-            rtcEngine?.startPreview()
         } else if clientRole == .clientRole_Broadcaster {
             rtcEngine?.enableVideo()
             rtcEngine?.startPreview()
@@ -117,11 +118,6 @@ class T3LoginViewController: UIViewController {
         }
         //--cdn
         let custom = AppManager.cdnCustom
-        var videoSize = custom.videoSize
-        if swapWH {
-            videoSize = CGSize(width: videoSize.height, height: videoSize.width)
-        }
-        config.videoSize = videoSize
         config.videoFrameRate = Int32(custom.fps)
         config.videoBitrate = Int32(custom.bitrate)
         if AppManager.doubleChannel {

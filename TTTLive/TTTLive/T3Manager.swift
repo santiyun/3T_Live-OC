@@ -12,81 +12,26 @@ import TTTRtcEngineKit
 let AppManager = T3Manager.manager
 
 extension TTTRtcVideoProfile {
-    func mixSize() -> CGSize {
-        var size = CGSize.zero
+    func getProfileInfo() -> (String, String, Int, Int, CGSize) {
         switch self {
         case ._VideoProfile_120P:
-            size = CGSize(width: 160, height: 120)
+            return ("65", "160x120", 15, 0, CGSize(width: 120, height: 160))
         case ._VideoProfile_180P:
-            size = CGSize(width: 320, height: 180)
+            return ("140", "320x180", 15, 1, CGSize(width: 180, height: 320))
         case ._VideoProfile_240P:
-            size = CGSize(width: 320, height: 240)
+            return ("200", "320x240", 15, 2, CGSize(width: 240, height: 320))
         case ._VideoProfile_480P:
-            size = CGSize(width: 640, height: 480)
+            return ("1000", "848x480", 15, 4, CGSize(width: 480, height: 848))
+        case ._VideoProfile_640x480:
+            return ("800", "640x480", 15, 5, CGSize(width: 480, height: 640))
+        case ._VideoProfile_960x540:
+            return ("1600", "960x540", 24, 6, CGSize(width: 540, height: 960))
         case ._VideoProfile_720P:
-            size = CGSize(width: 1280, height: 720)
+            return ("2400", "1280x720", 30, 7, CGSize(width: 720, height: 1280))
         case ._VideoProfile_1080P:
-            size = CGSize(width: 1920, height: 1080)
+            return ("3000", "1920x1080", 30, 8, CGSize(width: 1080, height: 1920))
         default:
-            size = CGSize(width: 640, height: 360)
-        }
-        return size
-    }
-    
-    func bitrate() -> Int {
-        switch self {
-        case ._VideoProfile_120P:
-            return 65
-        case ._VideoProfile_180P:
-            return 140
-        case ._VideoProfile_240P:
-            return 200
-        case ._VideoProfile_480P:
-            return 500
-        case ._VideoProfile_720P:
-            return 1130
-        case ._VideoProfile_1080P:
-            return 2080
-        default:
-            return 400
-        }
-    }
-}
-
-extension TTTRtcVideoProfile {
-    func getBitRate() -> String {
-        switch self {
-        case ._VideoProfile_120P:
-            return "65"
-        case ._VideoProfile_180P:
-            return "140"
-        case ._VideoProfile_240P:
-            return "200"
-        case ._VideoProfile_480P:
-            return "500"
-        case ._VideoProfile_720P:
-            return "1130"
-        case ._VideoProfile_1080P:
-            return "2080"
-        default:
-            return "400"
-        }
-    }
-    
-    func getSizeString() -> String {
-        switch self {
-        case ._VideoProfile_120P:
-            return "160x120"
-        case ._VideoProfile_180P:
-            return "320x180"
-        case ._VideoProfile_240P:
-            return "320x240"
-        case ._VideoProfile_480P:
-            return "640x480"
-        case ._VideoProfile_720P:
-            return "1280x720"
-        default:
-            return "640x360"
+            return ("600", "640x360", 15, 3, CGSize(width: 360, height: 640))
         }
     }
 }
@@ -112,8 +57,7 @@ class T3Manager: NSObject {
     
     private override init() {
         super.init()
-        //输入申请的三体云AppId
-        rtcEngine = TTTRtcEngineKit.sharedEngine(withAppId: <#name#>, delegate: nil)
+        rtcEngine = TTTRtcEngineKit.sharedEngine(withAppId: <#AppId#>, delegate: nil)
     }
     
     public func getVoiceImage(_ audioLevel: UInt) -> UIImage {
@@ -126,5 +70,28 @@ class T3Manager: NSObject {
             image = #imageLiteral(resourceName: "volume_3")
         }
         return image
+    }
+    
+    func getProfileIndex(_ index: Int) -> TTTRtcVideoProfile {
+        if index == 0 {
+            return ._VideoProfile_120P
+        } else if index == 1 {
+            return ._VideoProfile_180P
+        } else if index == 2 {
+            return ._VideoProfile_240P
+        } else if index == 3 {
+            return ._VideoProfile_360P
+        } else if index == 4 {
+            return ._VideoProfile_480P
+        } else if index == 5 {
+            return ._VideoProfile_640x480
+        } else if index == 6 {
+            return ._VideoProfile_960x540
+        } else if index == 7 {
+            return ._VideoProfile_720P
+        } else if index == 8 {
+            return ._VideoProfile_1080P
+        }
+        return ._VideoProfile_360P
     }
 }

@@ -37,7 +37,7 @@ typedef enum : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"1080P", @"自定义"];
+    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"640x480", @"960x540", @"720P", @"1080P", @"自定义"];
     _encodeTypes = @[@"H264", @"H265"];
     _channelTypes = @[@"48kHz-单声道", @"44.1kHz-双声道"];
     //
@@ -53,42 +53,56 @@ typedef enum : NSUInteger {
     BOOL isCustom = TTManager.cdnCustom.isCustom;
     [self refreshState:isCustom profile:TTManager.cdnProfile];
     if (isCustom) {
-        _profileIndex = 6;
+        _profileIndex = 9;
         [_pickView selectRow:_profileIndex inComponent:0 animated:YES];
         TTTCustomVideoProfile custom = TTManager.cdnCustom;
         _videoSizeTF.text = [NSString stringWithFormat:@"%.0fx%.0f", custom.videoSize.width, custom.videoSize.height];
         _videoBitrateTF.text = [NSString stringWithFormat:@"%lu", custom.videoBitRate];
         _videoFpsTF.text = [NSString stringWithFormat:@"%lu", custom.fps];
     } else {
+        _profileIndex = [TTManager getVideoInfo:TTManager.cdnProfile][3].integerValue;
         [_pickView selectRow:_profileIndex inComponent:0 animated:YES];
     }
 }
 
 - (NSString *)saveSettings {
     if ([_videoTitleTF.text isEqualToString:_videoSizes.lastObject]) {
+        
         NSArray<NSString *> *sizes = [_videoSizeTF.text componentsSeparatedByString:@"x"];
         if (sizes.count != 2) {
-            return @"请输入正确的cdn视频尺寸";
+            return @"请输入正确的视频参数";
         }
         if (sizes[0].longLongValue <= 0 || sizes[1].longLongValue <= 0) {
-            return @"请输入正确的cdn视频尺寸";
+            return @"请输入正确的视频参数";
+        }
+        
+        if (sizes[0].longLongValue > 1920) {
+            return @"视频宽最大为1920";
+        }
+        
+        if (sizes[1].longLongValue > 1080) {
+            return @"视频高最大为1080";
         }
         
         if (_videoBitrateTF.text.longLongValue <= 0) {
-            return @"请输入正确的cdn码率";
+            return @"请输入正确码率参数";
+        }
+        
+        if (_videoBitrateTF.text.longLongValue > 5000) {
+            return @"码率不能大于5000";
         }
         
         if (_videoFpsTF.text.longLongValue <= 0) {
-            return @"请输入正确的cdn帧率";
+            return @"请输入正确帧率参数";
         }
+        
         TTTCustomVideoProfile profile = {YES, CGSizeMake(sizes[0].longLongValue, sizes[1].longLongValue), _videoBitrateTF.text.longLongValue, _videoFpsTF.text.longLongValue};
         TTManager.cdnCustom = profile;
     } else {
         NSArray<NSString *> *sizes = [_videoSizeTF.text componentsSeparatedByString:@"x"];
         TTTCustomVideoProfile profile = {NO, CGSizeMake(sizes[0].longLongValue, sizes[1].longLongValue), _videoBitrateTF.text.longLongValue, _videoFpsTF.text.longLongValue};
         TTManager.cdnCustom = profile;
-        NSInteger index = [_pickView selectedRowInComponent:0];
-        TTManager.cdnProfile = index * 10;
+        TTManager.cdnProfile = [TTManager getProfileIndex:_profileIndex];
     }
     TTManager.h265 = _h265;
     TTManager.doubleChannel = _doubleChannel;
@@ -102,13 +116,14 @@ typedef enum : NSUInteger {
         _videoBitrateTF.enabled = YES;
         _videoFpsTF.enabled = YES;
     } else {
-        _profileIndex = profile / 10;
-        _videoTitleTF.text = _videoSizes[profile / 10];
+        NSArray<NSString *> *info = [TTManager getVideoInfo:profile];
+        _videoTitleTF.text = _videoSizes[info[3].integerValue];
         _videoSizeTF.enabled = NO;
         _videoBitrateTF.enabled = NO;
         _videoFpsTF.enabled = NO;
-        _videoSizeTF.text = videoSizeStr[profile];
-        _videoBitrateTF.text = videoBitrateStr[profile];
+        _videoSizeTF.text = info[1];
+        _videoBitrateTF.text = info[0];
+        _videoFpsTF.text = info[2];
     }
 }
 
@@ -142,8 +157,9 @@ typedef enum : NSUInteger {
     _pickBGView.hidden = YES;
     NSInteger index = [_pickView selectedRowInComponent:0];
     if (_pickType == PickerTypeSize) {
-        TTTRtcVideoProfile profile = index * 10;
-        [self refreshState:index == 7 profile:profile];
+        _profileIndex = index;
+        TTTRtcVideoProfile profile = [TTManager getProfileIndex:index];
+        [self refreshState:index == 9 profile:profile];
     } else if (_pickType == PickerTypeEncode) {
         _encodeTF.text = _encodeTypes[index];
         _h265 = index == 1;

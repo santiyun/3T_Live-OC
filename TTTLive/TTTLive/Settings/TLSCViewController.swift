@@ -29,7 +29,7 @@ class TLSCViewController: UIViewController {
     private var doubleChannel = false
     private var profileIndex = 0
     private var pickerType = PickerType.size
-    private let videoSizes = ["120P", "180P", "240P", "360P", "480P", "720P", "1080P", "自定义"]
+    private let videoSizes = ["120P", "180P", "240P", "360P", "480P", "640x480", "960x540", "720P", "1080P", "自定义"]
     private let encodeTypes = ["H264", "H265"]
     private let channelTypes = ["48kHz-单声道", "44.1kHz-双声道"]
     override func viewDidLoad() {
@@ -47,14 +47,15 @@ class TLSCViewController: UIViewController {
         let isCustom = AppManager.cdnCustom.isCustom
         refreshState(isCustom, profile: AppManager.cdnProfile)
         if isCustom {
-            profileIndex = 7
+            profileIndex = 9
             pickView.selectRow(profileIndex, inComponent: 0, animated: true)
             let custom = AppManager.cdnCustom
             videoSizeTF.text = "\(Int(custom.videoSize.width))x\(Int(custom.videoSize.height))"
             videoBitrateTF.text = custom.bitrate.description
             videoFpsTF.text = custom.fps.description
         } else {
-            pickView.selectRow(Int(AppManager.cdnProfile.rawValue / 10), inComponent: 0, animated: true)
+            profileIndex = AppManager.cdnProfile.getProfileInfo().3
+            pickView.selectRow(profileIndex, inComponent: 0, animated: true)
         }
     }
     
@@ -62,32 +63,48 @@ class TLSCViewController: UIViewController {
         if videoTitleTF.text == "自定义" {
             //videoSize必须以x分开两个数值
             if videoSizeTF.text == nil || videoSizeTF.text?.count == 0 {
-                return "请输入正确的cdn视频尺寸"
+                return "请输入正确参数"
             }
             
             let sizes = videoSizeTF.text?.components(separatedBy: "x")
             if sizes?.count != 2 {
-                return "请输入正确的cdn视频尺寸"
+                return "请输入正确视频参数"
             }
             
-            guard let sizeW = Int(sizes![0]), let sizeH = Int(sizes![1]) else {
-                return "请输入正确的cdn视频尺寸"
+            guard let sizeW = Int(sizes![0]), sizeW > 0 else {
+                return "请输入正确视频参数"
             }
             
-            guard let bitrate = Int(videoBitrateTF.text!) else {
-                return "请输入正确的cdn码率"
+            if sizeW > 1920 {
+                return "视频宽最大为1920"
             }
             
-            guard let fps = Int(videoFpsTF.text!) else {
-                return "请输入正确的cdn帧率"
+            guard let sizeH = Int(sizes![1]), sizeH > 0 else {
+                return "请输入正确视频参数"
             }
             
+            if sizeH > 1080 {
+                return "视频高最大为1080"
+            }
+            
+            guard let bitrate = Int(videoBitrateTF.text!), bitrate > 0 else {
+                return "请输入正确码率参数"
+            }
+            
+            if bitrate > 5000 {
+                return "码率不能大于5000"
+            }
+            
+            guard let fps = Int(videoFpsTF.text!), fps > 0 else {
+                return "请输入正确帧率参数"
+            }
+
             AppManager.cdnCustom = (true, CGSize(width: sizeW, height: sizeH),bitrate,fps)
         } else {
-            let index = pickView.selectedRow(inComponent: 0)
-            let profile = TTTRtcVideoProfile(rawValue: UInt(index * 10))!
+            let index = profileIndex
+            let profile = AppManager.getProfileIndex(index)
             AppManager.cdnProfile = profile
-            AppManager.cdnCustom = (false, AppManager.cdnProfile.mixSize(), profile.bitrate(), 15)
+            AppManager.cdnCustom = (false, profile.getProfileInfo().4, Int(profile.getProfileInfo().0), profile.getProfileInfo().2) as! (isCustom: Bool, videoSize: CGSize, bitrate: Int, fps: Int) 
         }
         AppManager.h265 = h265
         AppManager.doubleChannel = doubleChannel
@@ -101,13 +118,14 @@ class TLSCViewController: UIViewController {
             videoBitrateTF.isEnabled = true
             videoFpsTF.isEnabled = true
         } else {
-            profileIndex = Int(profile.rawValue / 10)
+            profileIndex = profile.getProfileInfo().3
             videoTitleTF.text = videoSizes[profileIndex]
             videoSizeTF.isEnabled = false
             videoBitrateTF.isEnabled = false
             videoFpsTF.isEnabled = false
-            videoSizeTF.text = profile.getSizeString()
-            videoBitrateTF.text = profile.getBitRate()
+            videoSizeTF.text = profile.getProfileInfo().1
+            videoBitrateTF.text = profile.getProfileInfo().0
+            videoFpsTF.text = profile.getProfileInfo().2.description
         }
     }
     
@@ -146,8 +164,9 @@ class TLSCViewController: UIViewController {
             encodeTF.text = encodeTypes[index]
             h265 = index == 1
         } else {
-            let profile: TTTRtcVideoProfile = TTTRtcVideoProfile(rawValue: UInt(index * 10))!
-            refreshState(index == 7, profile: profile)
+            profileIndex = index
+            let profile = AppManager.getProfileIndex(index)
+            refreshState(index == 9, profile: profile)
         }
     }
     

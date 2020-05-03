@@ -65,6 +65,7 @@ static NSString *const TTTH265 = @"?trans=1";
     [rtcEngine setChannelProfile:TTTRtc_ChannelProfile_LiveBroadcasting];
     [rtcEngine setClientRole:clientRole];
     [rtcEngine enableAudioVolumeIndication:200 smooth:3];
+//    [rtcEngine setLogFilter:TTTRtc_LogFilter_Debug];
     BOOL swapWH = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
     if (clientRole == TTTRtc_ClientRole_Anchor) {
         if (TTManager.isCustom) {//自定义设置
@@ -88,8 +89,7 @@ static NSString *const TTTH265 = @"?trans=1";
         [rtcEngine enableLocalVideo:NO];
         [rtcEngine muteLocalAudioStream:YES];
     }
-    
-    
+
     [rtcEngine joinChannelByKey:nil channelName:_roomIDTF.text uid:_uid joinSuccess:nil];
 }
 
@@ -122,11 +122,6 @@ static NSString *const TTTH265 = @"?trans=1";
     }
     //cdn
     TTTCustomVideoProfile custom = TTManager.cdnCustom;
-    CGSize videoSize = custom.videoSize;
-    if (swapWH) {
-        videoSize = CGSizeMake(videoSize.height, videoSize.width);
-    }
-    config.videoSize = videoSize;
     config.videoFrameRate = custom.fps;
     config.videoBitrate = custom.videoBitRate;
     if (TTManager.doubleChannel) {

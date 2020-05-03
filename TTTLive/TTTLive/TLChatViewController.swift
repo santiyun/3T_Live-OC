@@ -52,7 +52,6 @@ class TLChatViewController: UIViewController {
             }
             videoLayout?.backgroundColor = "#e8e6e8"
         } else if AppManager.me.clientRole == .clientRole_Broadcaster {
-            AppManager.rtcEngine.startPreview()
             switchBtn.isHidden = true
         }
         //必须确保UI更新完成，否则SEI可能找不到对应位置-iPhone5c

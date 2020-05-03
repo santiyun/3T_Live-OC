@@ -24,18 +24,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"720P", @"1080P", @"自定义"];
+    _videoSizes = @[@"120P", @"180P", @"240P", @"360P", @"480P", @"640x480", @"960x540", @"720P", @"1080P", @"自定义"];
     _audioSwitch.on = TTManager.isHighQualityAudio;
     BOOL isCustom = TTManager.localCustomProfile.isCustom;
     [self refreshState:isCustom profile:TTManager.localProfile];
     if (isCustom) {
-        [_pickView selectRow:6 inComponent:0 animated:YES];
+        [_pickView selectRow:9 inComponent:0 animated:YES];
         TTTCustomVideoProfile custom = TTManager.localCustomProfile;
         _videoSizeTF.text = [NSString stringWithFormat:@"%.0fx%.0f", custom.videoSize.width, custom.videoSize.height];
         _videoBitrateTF.text = [NSString stringWithFormat:@"%lu", custom.videoBitRate];
         _videoFpsTF.text = [NSString stringWithFormat:@"%lu", custom.fps];
     } else {
-        [_pickView selectRow:TTManager.localProfile / 10 inComponent:0 animated:YES];
+        [_pickView selectRow:[TTManager getVideoInfo:TTManager.localProfile][3].integerValue inComponent:0 animated:YES];
     }
 }
 
@@ -69,16 +69,13 @@
             return @"请输入正确帧率参数";
         }
         
-        if (_videoFpsTF.text.longLongValue > 25) {
-            return @"帧率不能大于25";
-        }
         TTTCustomVideoProfile profile = {YES, CGSizeMake(sizes[0].longLongValue, sizes[1].longLongValue), _videoBitrateTF.text.integerValue, _videoFpsTF.text.longLongValue};
         TTManager.localCustomProfile = profile;
     } else {
         TTTCustomVideoProfile profile = {NO, CGSizeZero, 0, 0};
         TTManager.localCustomProfile = profile;
         NSInteger index = [_pickView selectedRowInComponent:0];
-        TTManager.localProfile = index * 10;
+        TTManager.localProfile = [TTManager getProfileIndex:index];
     }
     TTManager.isHighQualityAudio = _audioSwitch.isOn;
     return nil;
@@ -91,12 +88,14 @@
         _videoBitrateTF.enabled = YES;
         _videoFpsTF.enabled = YES;
     } else {
-        _videoTitleTF.text = _videoSizes[profile / 10];
+        NSArray<NSString *> *info = [TTManager getVideoInfo:profile];
+        _videoTitleTF.text = _videoSizes[info[3].integerValue];
         _videoSizeTF.enabled = NO;
         _videoBitrateTF.enabled = NO;
         _videoFpsTF.enabled = NO;
-        _videoSizeTF.text = videoSizeStr[profile];
-        _videoBitrateTF.text = videoBitrateStr[profile];
+        _videoSizeTF.text = info[1];
+        _videoBitrateTF.text = info[0];
+        _videoFpsTF.text = info[2];
     }
 }
 
@@ -111,8 +110,8 @@
 - (IBAction)sureSetting:(id)sender {
     _pickBGView.hidden = YES;
     NSInteger index = [_pickView selectedRowInComponent:0];
-    TTTRtcVideoProfile profile = index * 10;
-    [self refreshState:index == 7 profile:profile];
+    TTTRtcVideoProfile profile = [TTManager getProfileIndex:index];
+    [self refreshState:index == 9 profile:profile];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
